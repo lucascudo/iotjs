@@ -1,0 +1,15 @@
+{
+  "name": "iotjs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "cylon": "^1.3.0",
+    "cylon-api-http": "^0.4.1",
+    "cylon-firmata": "^0.24.0",
+    "cylon-gpio": "^0.30.1",
+    "cylon-i2c": "^0.26.1"
+  }
+}

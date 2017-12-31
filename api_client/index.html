@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <title>Galinheiro</title>
+   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <button id="btn-on" class="btn btn-primary btn-on-off"> <span class="glyphicon glyphicon-off" ></span> </button>
+        <button id="btn-off" class="btn btn-danger btn-on-off"> <span class="glyphicon glyphicon-off" ></span> </button>
+      </div>
+    </div>
+  </div>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    function runCommand(command, cb) {
+      $.get('https://127.0.0.1:3000/api/robots/Robot%201/commands/' + command, cb);
+    }
+    function updateButton() {
+      runCommand('led_is_on', (data) => {
+        console.log(data.result);
+        if (data.result) {
+          $('#btn-on').show();
+          $('#btn-off').hide();
+        } else {
+          $('#btn-off').show();
+          $('#btn-on').hide();
+        }
+      });
+    }
+    function toggleLed() {
+      runCommand('led_toggle', updateButton);
+    }
+
+    $(document).ready(updateButton);
+    $('.btn-on-off').click(toggleLed);
+  </script>
+</body>
+</html>
