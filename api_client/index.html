@@ -42,11 +42,12 @@
   <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    const refreshInterval = 2000;
+    const refreshInterval = 1000;
     function runCommand(command, cb) {
       $.get('https://127.0.0.1:3000/api/robots/Robot%201/commands/' + command, cb);
     }
-    updateStatus(condition, showOnTrue, showOnFalse) {
+    function updateStatus(condition, showOnTrue, showOnFalse) {
+      console.log(showOnTrue, ': ', condition);
       if (condition) {
         $(showOnTrue).show();
         $(showOnFalse).hide();
@@ -58,11 +59,11 @@
     function updateLightStatus() {
       runCommand('led_is_on', (data) => updateStatus(data.result, '#btn-on', '#btn-off'));
     }
-    function updateMotionSensorStatusStatus() {
+    function updateMotionSensorStatus() {
       runCommand('motion_sensor', (data) => updateStatus(data.result, '#motion-on', '#motion-off'));
     }
     function updateDoorStatus() {
-      runCommand('magnetic_sensor', (data) => updateStatus(data.result, '#door-open', '#door-closed'));
+      runCommand('reed_sensor', (data) => updateStatus(data.result, '#door-open', '#door-closed'));
     }
     function toggleLed() {
       runCommand('led_toggle', updateLightStatus);
@@ -70,7 +71,7 @@
     function refreshPage() {
       updateLightStatus();
       updateMotionSensorStatus();
-      updateMotionDoorStatus();
+      updateDoorStatus();
     }
 
     $(document).ready(() => {

@@ -27,7 +27,7 @@ Cylon.robot({
     motion_sensor: function () {
       return this.motionSensor.analogRead();
     },
-    magnetic_sensor: function () {
+    reed_sensor: function () {
       return this.reedSwitch.analogRead();
     }
   }
