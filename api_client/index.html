@@ -58,7 +58,7 @@
     function updateLightStatus() {
       runCommand('led_is_on', (data) => updateStatus(data.result, '#btn-on', '#btn-off'));
     }
-    function updateMotionSensorStatusStatus() {
+    function updateMotionSensorStatus() {
       runCommand('motion_sensor', (data) => updateStatus(data.result, '#motion-on', '#motion-off'));
     }
     function updateDoorStatus() {
