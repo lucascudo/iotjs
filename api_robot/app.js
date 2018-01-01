@@ -12,7 +12,8 @@ Cylon.robot({
 
   devices: {
     led: { driver: 'led', pin: 13 },
-    motionSensor: { driver: 'analog-sensor', pin: 0 }
+    motionSensor: { driver: 'analog-sensor', pin: 0 },
+    reedSwitch: { driver: 'analog-sensor', pin: 1 }
   },
 
   work: () => {},
@@ -25,6 +26,9 @@ Cylon.robot({
     },
     motion_sensor: function () {
       return this.motionSensor.analogRead();
+    },
+    magnetic_sensor: function () {
+      return this.reedSwitch.analogRead();
     }
   }
 }).start();

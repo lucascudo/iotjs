@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <title>Galinheiro</title>
+   <title>Chicken Run</title>
    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -14,6 +14,9 @@
       </div>
       <div class="col-md-4">
         Motion Detection
+      </div>
+      <div class="col-md-4">
+        Door Status
       </div>
     </div>
     <div class="row">
@@ -29,49 +32,50 @@
         <img id="motion-on" src="img/checked.png">
         <img id="motion-off" src="img/unchecked.png">
       </div>
+      <div class="col-md-4">
+        <img id="door-open" src="img/door-open.png">
+        <img id="door-closed" src="img/door-closed.png">
+      </div>
     </div>
   </div>
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript">
+    const refreshInterval = 2000;
     function runCommand(command, cb) {
       $.get('https://127.0.0.1:3000/api/robots/Robot%201/commands/' + command, cb);
     }
-    function updateLightButton() {
-      runCommand('led_is_on', (data) => {
-        if (data.result) {
-          $('#btn-on').show();
-          $('#btn-off').hide();
-        } else {
-          $('#btn-off').show();
-          $('#btn-on').hide();
-        }
-      });
+    updateStatus(condition, showOnTrue, showOnFalse) {
+      if (condition) {
+        $(showOnTrue).show();
+        $(showOnFalse).hide();
+      } else {
+        $(showOnFalse).show();
+        $(showOnTrue).hide();
+      }
     }
-
-    function updateMotionSensor() {
-      runCommand('motion_sensor', (data) => {
-        if (data.result) {
-          $('#motion-on').show();
-          $('#motion-off').hide();
-        } else {
-          $('#motion-off').show();
-          $('#motion-on').hide();
-        }
-      });
+    function updateLightStatus() {
+      runCommand('led_is_on', (data) => updateStatus(data.result, '#btn-on', '#btn-off'));
+    }
+    function updateMotionSensorStatusStatus() {
+      runCommand('motion_sensor', (data) => updateStatus(data.result, '#motion-on', '#motion-off'));
+    }
+    function updateDoorStatus() {
+      runCommand('magnetic_sensor', (data) => updateStatus(data.result, '#door-open', '#door-closed'));
     }
     function toggleLed() {
-      runCommand('led_toggle', updateLightButton);
+      runCommand('led_toggle', updateLightStatus);
     }
     function refreshPage() {
-      updateLightButton();
-      updateMotionSensor();
+      updateLightStatus();
+      updateMotionSensorStatus();
+      updateMotionDoorStatus();
     }
 
     $(document).ready(() => {
       refreshPage();
-      setInterval(refreshPage, 5000);
+      setInterval(refreshPage, refreshInterval);
     });
     $('.btn-on-off').click(toggleLed);
   </script>
