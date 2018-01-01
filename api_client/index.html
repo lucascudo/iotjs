@@ -9,13 +9,25 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-sm">
+      <div class="col-md-4">
+        Light
+      </div>
+      <div class="col-md-4">
+        Motion Detection
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
         <button id="btn-on" class="btn btn-primary btn-on-off">
           <img src="img/bulb-on.png">
         </button>
         <button id="btn-off" class="btn btn-danger btn-on-off">
           <img src="img/bulb-off.png">
         </button>
+      </div>
+      <div class="col-md-4">
+        <img id="motion-on" src="img/checked.png">
+        <img id="motion-off" src="img/unchecked.png">
       </div>
     </div>
   </div>
@@ -26,7 +38,7 @@
     function runCommand(command, cb) {
       $.get('https://127.0.0.1:3000/api/robots/Robot%201/commands/' + command, cb);
     }
-    function updateButton() {
+    function updateLightButton() {
       runCommand('led_is_on', (data) => {
         if (data.result) {
           $('#btn-on').show();
@@ -37,11 +49,30 @@
         }
       });
     }
+
+    function updateMotionSensor() {
+      runCommand('motion_sensor', (data) => {
+        if (data.result) {
+          $('#motion-on').show();
+          $('#motion-off').hide();
+        } else {
+          $('#motion-off').show();
+          $('#motion-on').hide();
+        }
+      });
+    }
     function toggleLed() {
-      runCommand('led_toggle', updateButton);
+      runCommand('led_toggle', updateLightButton);
+    }
+    function refreshPage() {
+      updateLightButton();
+      updateMotionSensor();
     }
 
-    $(document).ready(updateButton);
+    $(document).ready(() => {
+      refreshPage();
+      setInterval(refreshPage, 5000);
+    });
     $('.btn-on-off').click(toggleLed);
   </script>
 </body>
