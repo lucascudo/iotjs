@@ -2,8 +2,7 @@ const Cylon = require("cylon");
 const fs = require('fs');
 const ini = require('ini');
 
-config = ini.parse(fs.readFileSync(__dirname + '/.env', 'utf-8'));
-console.log(config);
+const config = ini.parse(fs.readFileSync(__dirname + '/.env', 'utf-8'));
 
 Cylon.api('http');
 Cylon.robot({

@@ -10,8 +10,12 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <button id="btn-on" class="btn btn-primary btn-on-off"> <span class="glyphicon glyphicon-off" ></span> </button>
-        <button id="btn-off" class="btn btn-danger btn-on-off"> <span class="glyphicon glyphicon-off" ></span> </button>
+        <button id="btn-on" class="btn btn-primary btn-on-off">
+          <img src="img/bulb-on.png">
+        </button>
+        <button id="btn-off" class="btn btn-danger btn-on-off">
+          <img src="img/bulb-off.png">
+        </button>
       </div>
     </div>
   </div>
@@ -24,7 +28,6 @@
     }
     function updateButton() {
       runCommand('led_is_on', (data) => {
-        console.log(data.result);
         if (data.result) {
           $('#btn-on').show();
           $('#btn-off').hide();

@@ -1,6 +1,6 @@
 # Setup
 ```
-npm i && sudo npm i http-server
+npm i && sudo npm i http-server -g
 ```
 
 # Run
