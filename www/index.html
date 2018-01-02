@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
    <title>Chicken Run</title>
-   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+   <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
 </head>
 <body style="background-color: silver;">
   <div class="container">
@@ -22,29 +22,31 @@
     <div class="row">
       <div class="col-md-4">
         <a id="btn-on" src="#">
-          <img src="img/bulb-on.png">
+          <img src="/img/bulb-on.png">
         </a>
         <a id="btn-off" src="#">
-          <img src="img/bulb-off.png">
+          <img src="/img/bulb-off.png">
         </a>
       </div>
       <div class="col-md-4">
-        <img id="motion-on" src="img/checked.png">
-        <img id="motion-off" src="img/unchecked.png">
+        <img id="motion-on" src="/img/checked.png">
+        <img id="motion-off" src="/img/unchecked.png">
       </div>
       <div class="col-md-4">
-        <img id="door-open" src="img/door-open.png">
-        <img id="door-closed" src="img/door-closed.png">
+        <img id="door-open" src="/img/door-open.png">
+        <img id="door-closed" src="/img/door-closed.png">
       </div>
     </div>
   </div>
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
-  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/jquery/dist/jquery.min.js"></script>
+  <script src="/popper.js/dist/umd/popper.min.js"></script>
+  <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript">
     const refreshInterval = 1000;
     function runCommand(command, cb) {
-      $.get('https://127.0.0.1:3000/api/robots/Robot%201/commands/' + command, cb);
+      $.get('https://' + window.location.hostname + '/api/robots/Robot%201/commands/' + command)
+      .done(cb)
+      .catch((err) => console.log('API Error: ' + err.status + ' - ' + err.statusText));
     }
     function updateStatus(condition, showOnTrue, showOnFalse) {
       console.log(showOnTrue, ': ', condition);

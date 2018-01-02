@@ -1,10 +1,20 @@
-const Cylon = require("cylon");
 const fs = require('fs');
 const ini = require('ini');
+const connect = require('connect');
+const serveStatic = require('serve-static');
+const path = require('path');
+const Cylon = require("cylon");
 
 const config = ini.parse(fs.readFileSync(__dirname + '/.env', 'utf-8'));
 
-Cylon.api('http');
+connect()
+.use(serveStatic(path.join(__dirname, 'www')))
+.use(serveStatic(path.join(__dirname, 'node_modules')))
+.listen(80, () => {
+    console.log('Web interface running on port ' + 80);
+});
+
+Cylon.api('http', { host: config.HOSTNAME, port: 443 });
 Cylon.robot({
   connections: {
     arduino1: { adaptor: 'firmata', port: config.USB1 }
@@ -32,5 +42,3 @@ Cylon.robot({
     }
   }
 }).start();
-
-module.exports = Cylon;
