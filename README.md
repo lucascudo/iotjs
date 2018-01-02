@@ -1,4 +1,4 @@
-# Chicken Run
+# Chicken Run Avoid
 Simple Internet of Things Proof of Concept fully developed in JavaScript.
 
 ## Setup
