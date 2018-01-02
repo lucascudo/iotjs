@@ -12,7 +12,7 @@ and configure you *.env* file.
 npm start
 ```
 ## Chicken Run Dashboard
-Open http://yourserver
+http://yourserver
 
 ## Cylon.js Dashboard
-Open https://yourserver
+https://yourserver
