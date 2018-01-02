@@ -41,19 +41,21 @@
   <script src="/jquery/dist/jquery.min.js"></script>
   <script src="/popper.js/dist/umd/popper.min.js"></script>
   <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="/cylon_connector.js"></script>
+  <script src="/jcylon_connector.js"></script>
   <script type="text/javascript">
-   $(document).ready(() => {
+    $(document).ready(() => {
+      function refreshPage() {
+        jCylonConnector.updateLightStatus('#light-on', '#light-off');
+        jCylonConnector.updateMotionSensorStatus('#motion-on', '#motion-off');
+        jCylonConnector.updateDoorStatus('#door-open', '#door-closed');
+      }
+
       refreshPage();
-      $('.btn-on-off').click(toggleLed);
       setInterval(refreshPage, 1000);
-   });
-   function refreshPage() {
-      CylonConnector.updateLightStatus();
-      CylonConnector.updateMotionSensorStatus();
-      CylonConnector.updateDoorStatus();
-   }
-    
+      $('.btn-on-off').click(jCylonConnector.toggleLed(() => {
+        jCylonConnector.updateLightStatus('#light-on', '#light-off');
+      }));
+    });
   </script>
 </body>
 </html>
