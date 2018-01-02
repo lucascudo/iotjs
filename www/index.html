@@ -41,40 +41,19 @@
   <script src="/jquery/dist/jquery.min.js"></script>
   <script src="/popper.js/dist/umd/popper.min.js"></script>
   <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/CylonConnector.js"></script>
   <script type="text/javascript">
-    const refreshInterval = 1000;
-    function runCommand(command, cb) {
-      $.get('https://' + window.location.hostname + '/api/robots/Robot%201/commands/' + command)
-      .done(cb)
-      .catch((err) => console.log('API Error: ' + err.status + ' - ' + err.statusText));
-    }
-    function updateStatus(condition, showOnTrue, showOnFalse) {
-       $((condition) ? showOnTrue : showOnFalse).show();
-       $((condition) ? showOnFalse : showOnTrue).hide();
-    }
-    function updateLightStatus() {
-      runCommand('led_is_on', (data) => updateStatus(data.result, '#btn-on', '#btn-off'));
-    }
-    function updateMotionSensorStatus() {
-      runCommand('motion_sensor', (data) => updateStatus(data.result, '#motion-on', '#motion-off'));
-    }
-    function updateDoorStatus() {
-      runCommand('reed_sensor', (data) => updateStatus(data.result, '#door-open', '#door-closed'));
-    }
-    function toggleLed() {
-      runCommand('led_toggle', updateLightStatus);
-    }
-    function refreshPage() {
-      updateLightStatus();
-      updateMotionSensorStatus();
-      updateDoorStatus();
-    }
-
-    $(document).ready(() => {
+   $(document).ready(() => {
       refreshPage();
       $('.btn-on-off').click(toggleLed);
-      setInterval(refreshPage, refreshInterval);
-    });
+      setInterval(refreshPage, 1000);
+   });
+   function refreshPage() {
+      CylonConnector.updateLightStatus();
+      CylonConnector.updateMotionSensorStatus();
+      CylonConnector.updateDoorStatus();
+   }
+    
   </script>
 </body>
 </html>
