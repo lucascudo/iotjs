@@ -1,4 +1,4 @@
-# Chicken Run Avoid
+# chicken run avoidance
 Simple Internet of Things Proof of Concept fully developed in JavaScript.
 
 ## Setup
@@ -11,7 +11,7 @@ and configure you *.env* file.
 ```
 npm start
 ```
-## Chicken Run Dashboard
+## System Dashboard
 http://127.0.0.1
 
 ## Cylon.js Dashboard
