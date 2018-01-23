@@ -1,26 +1,13 @@
 # chicken run avoidance
 Simple Internet of Things Proof of Concept fully developed in JavaScript.
 
-## Setup
-```
-npm i
-```
-and configure you *.env* file.
+## Desafio
 
-## Run
-```
-npm start
-```
-## System Dashboard
-http://127.0.0.1
+Seu João Paz viaja muito e está preocupado com sua criação de galinhas que passa longos períodos sem seus cuidados. O mesmo deseja ligar e desligar as luzes do galinheiro através da internet.
 
-## Cylon.js Dashboard
-https://127.0.0.1
+Você foi designado para criar o protótipo de tal aplicação que necessitará de:
 
-## Demo
-
-### Light On/Off
-[![Light On/Off](https://img.youtube.com/vi/XUuap5oODak/0.jpg)](https://youtu.be/XUuap5oODak)
-
-### Motion Detection
-[![Motion Detection](https://img.youtube.com/vi/-Z6yH5RHSHU/0.jpg)](https://youtu.be/-Z6yH5RHSHU)
+Webservice
+Led
+Hardware/Microcontrolador (NodeMcu, Arduino, Raspbery pi etc)
+Interface entre webservice e hardware (Dashboard que permita a interação do cliente com o sistema).
