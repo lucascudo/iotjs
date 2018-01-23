@@ -34,7 +34,6 @@ export default class HolisticatorAPP extends Component {
     let update = {};
     update[stateToUpdate] = res.result;
     this.setState(update);
-    console.log(this.state);
   });
 
   _updateLedStatus = () => this.updateStatus('led_is_on', 'ledIsOn');
@@ -70,11 +69,9 @@ export default class HolisticatorAPP extends Component {
           <Right />
         </Header>
         <Content>
-          <Button onPress={this._toogleLed}>
-            <Icon name={icons.led}/>
-          </Button>
+          <Icon name={icons.led} onPress={this._toogleLed}/>
           <Icon name={icons.sunny}/>
-          <Icon on={icons.motion}/>
+          <Icon name={icons.motion}/>
           {icons.door}
         </Content>
         <Footer>
