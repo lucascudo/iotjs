@@ -21,10 +21,10 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <a id="btn-on" src="#">
+        <a id="light-on" class="btn-on-off" src="#">
           <img src="/img/bulb-on.png">
         </a>
-        <a id="btn-off" src="#">
+        <a id="light-off" class="btn-on-off" src="#">
           <img src="/img/bulb-off.png">
         </a>
       </div>
@@ -52,9 +52,9 @@
 
       refreshPage();
       setInterval(refreshPage, 1000);
-      $('.btn-on-off').click(jCylonConnector.toggleLed(() => {
-        jCylonConnector.updateLightStatus('#light-on', '#light-off');
-      }));
+      $('.btn-on-off').click(() =>
+        jCylonConnector.toggleLed(() =>
+          jCylonConnector.updateLightStatus('#light-on', '#light-off')));
     });
   </script>
 </body>

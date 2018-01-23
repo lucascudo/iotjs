@@ -14,19 +14,21 @@ connect()
     console.log('Web interface running on port ' + 80);
 });
 
-Cylon.api('http', { host: config.HOSTNAME, port: 443 });
+Cylon.api('http', {
+  host: config.HOSTNAME,
+  port: config.PORT,
+  ssl: false
+});
+
 Cylon.robot({
   connections: {
     arduino1: { adaptor: 'firmata', port: config.USB1 }
   },
-
   devices: {
     led: { driver: 'led', pin: 13 },
     motionSensor: { driver: 'analog-sensor', pin: 0 },
     reedSwitch: { driver: 'analog-sensor', pin: 1 }
   },
-
-  work: () => {},
   commands: {
     led_toggle: function () {
       return this.led.toggle();
@@ -40,5 +42,6 @@ Cylon.robot({
     reed_sensor: function () {
       return this.reedSwitch.analogRead();
     }
-  }
+  },
+  work: () => {}
 }).start();

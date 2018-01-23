@@ -6,7 +6,7 @@ export default class HolisticatorAPP extends Component {
     ready: false,
     ledIsOn: false,
     isSunny: false,
-    doorIsOpen: true,
+    doorIsOpen: false,
     thereIsMovement: false,
   };
 
@@ -16,14 +16,46 @@ export default class HolisticatorAPP extends Component {
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
     this.setState({ ready: true });
+    setInterval(() => {
+      this._updateLedStatus();
+      this._updateReedStatus();
+      this._updateMotionSensorStatus();
+    }, 1000);
   }
 
-  _toogleLed() {
-    this.setState({ ledIsOn: !this.state.ledIsOn });
-    Alert.alert(this.state.ledIsOn);
+  remoteCommand = (command, cb) => {
+    return fetch('http://172.20.10.181:3001/api/robots/Robot%201/commands/' + command)
+    .then((res) => res.json())
+    .then(cb)
+    .catch(console.error);
   }
+
+  updateStatus = (commandToRun, stateToUpdate) => this.remoteCommand(commandToRun, (res) => {
+    let update = {};
+    update[stateToUpdate] = res.result;
+    this.setState(update);
+    console.log(this.state);
+  });
+
+  _updateLedStatus = () => this.updateStatus('led_is_on', 'ledIsOn');
+
+  _updateReedStatus = () => this.updateStatus('reed_sensor', 'doorIsOpen');
+
+  _updateMotionSensorStatus = () => this.updateStatus('motion_sensor', 'thereIsMovement');
+
+  _toogleLed = () => this.remoteCommand('led_toggle', this._updateLedStatus);
 
   render() {
+    const icons = {
+      led: (this.state.ledIsOn) ? "ios-bulb" : "ios-bulb-outline",
+      sunny: (this.state.isSunny) ? "ios-sunny" : "ios-sunny-outline",
+      motion: (this.state.thereIsMovement) ? "ios-walk" : "ios-remove-circle",
+      door: (this.state.doorIsOpen)
+        ? (<Icon name="ios-alert">
+            <Text>the door is open</Text>
+          </Icon>)
+        : null
+    };
     return (this.state.ready) ? (
       <Container>
         <Header>
@@ -39,11 +71,11 @@ export default class HolisticatorAPP extends Component {
         </Header>
         <Content>
           <Button onPress={this._toogleLed}>
-            <LedIcon on={this.state.ledIsOn}/>
+            <Icon name={icons.led}/>
           </Button>
-          <SunnyIcon on={this.state.isSunny}/>
-          <MotionIcon on={this.state.thereIsMovement}/>
-          <DoorIcon open={this.state.doorIsOpen}/>
+          <Icon name={icons.sunny}/>
+          <Icon on={icons.motion}/>
+          {icons.door}
         </Content>
         <Footer>
           <FooterTab>
@@ -56,38 +88,6 @@ export default class HolisticatorAPP extends Component {
     ) : (
       <Text>Loading...</Text>
     );
-  }
-}
-
-export class LedIcon extends Component {
-    render() {
-      const iconName = (this.props.on) ? "ios-bulb" : "ios-bulb-outline";
-      return <Icon name={iconName}/>;
-    }
-}
-
-export class SunnyIcon extends Component {
-    render() {
-      const iconName = (this.props.on) ? "ios-sunny" : "ios-sunny-outline";
-      return <Icon name={iconName}/>;
-    }
-}
-
-export class MotionIcon extends Component {
-    render() {
-      const iconName = (this.props.on) ? "ios-walk" : "ios-remove-circle";
-      return <Icon name={iconName}/>;
-    }
-}
-
-export class DoorIcon extends Component {
-  render() {
-    const icon = (this.props.open)
-      ? (<Icon name="ios-alert">
-          <Text>the door is open</Text>
-        </Icon>)
-      : null;
-    return icon;
   }
 }
 

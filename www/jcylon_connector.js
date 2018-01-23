@@ -1,9 +1,8 @@
-var refreshInterval = refreshInterval || 1000;
 const jCylonConnector = {
   runCommand: (command, cb) => {
     $.get('https://' + window.location.hostname + '/api/robots/Robot%201/commands/' + command)
     .done(cb)
-    .catch((err) => console.log('API Error: ', err.status, ' - ', err.statusText, err.responseJSON.error));
+    .catch((err) => console.error('API Error: ', err.status, ' - ', err.statusText));
   },
   updateStatus: (condition, showOnTrue, showOnFalse) => {
     $((condition) ? showOnTrue : showOnFalse).show();
