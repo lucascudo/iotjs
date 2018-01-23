@@ -24,7 +24,7 @@ export default class HolisticatorAPP extends Component {
   }
 
   remoteCommand = (command, cb) => {
-    return fetch('http://172.20.10.181:3001/api/robots/Robot%201/commands/' + command)
+    return fetch('http://172.20.10.181:3000/api/robots/Robot%201/commands/' + command)
     .then((res) => res.json())
     .then(cb)
     .catch(console.error);

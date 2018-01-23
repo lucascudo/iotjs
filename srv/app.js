@@ -10,13 +10,13 @@ const config = ini.parse(fs.readFileSync(__dirname + '/.env', 'utf-8'));
 connect()
 .use(serveStatic(path.join(__dirname, 'www')))
 .use(serveStatic(path.join(__dirname, 'node_modules')))
-.listen(80, () => {
-    console.log('Web interface running on port ' + 80);
+.listen(config.WEB_PORT, () => {
+    console.log('Web interface running on port ' + config.WEB_PORT);
 });
 
 Cylon.api('http', {
   host: config.HOSTNAME,
-  port: config.PORT,
+  port: config.API_PORT,
   ssl: false
 });
 
@@ -37,7 +37,7 @@ Cylon.robot({
       return this.led.isOn();
     },
     motion_sensor: function () {
-      return this.motionSensor.analogRead();
+      return this.motionSensor.analogRead()
     },
     reed_sensor: function () {
       return this.reedSwitch.analogRead();
