@@ -5,7 +5,7 @@ export default class HolisticatorAPP extends Component {
   state = {
     ready: false,
     ledIsOn: false,
-    isSunny: false,
+    isSunny: 0,
     doorIsOpen: false,
     thereIsMovement: false,
   };
@@ -19,8 +19,9 @@ export default class HolisticatorAPP extends Component {
     setInterval(() => {
       this._updateLedStatus();
       this._updateReedStatus();
+      this._updateLuxSensorStatus();
       this._updateMotionSensorStatus();
-    }, 1000);
+    }, 5000);
   }
 
   remoteCommand = (command, cb) => {
@@ -42,12 +43,14 @@ export default class HolisticatorAPP extends Component {
 
   _updateMotionSensorStatus = () => this.updateStatus('motion_sensor', 'thereIsMovement');
 
+  _updateLuxSensorStatus = () => this.updateStatus('lux_sensor', 'isSunny');
+
   _toogleLed = () => this.remoteCommand('led_toggle', this._updateLedStatus);
 
   render() {
     const icons = {
-      led: (this.state.ledIsOn) ? "ios-bulb" : "ios-bulb-outline",
-      sunny: (this.state.isSunny) ? "ios-sunny" : "ios-sunny-outline",
+      led: (this.state.ledIsOn) ? "ios-bulb-outline" : "ios-bulb",
+      sunny: (this.state.isSunny > 100) ? "ios-sunny-outline" : "ios-sunny",
       motion: (this.state.thereIsMovement) ? "ios-walk" : "ios-remove-circle",
       door: (this.state.doorIsOpen)
         ? (<Icon name="ios-alert">

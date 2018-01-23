@@ -32,7 +32,8 @@ Cylon.robot({
   devices: {
     led: { driver: 'led', pin: 13 },
     motionSensor: { driver: 'direct-pin', pin: 12 },
-    reedSwitch: { driver: 'direct-pin', pin: 11 }
+    reedSwitch: { driver: 'direct-pin', pin: 11 },
+    luxSensor: { driver: 'analog-sensor', pin: 0 }
   },
   commands: {
     led_toggle: function () {
@@ -40,6 +41,9 @@ Cylon.robot({
     },
     led_is_on: function () {
       return this.led.isOn();
+    },
+    lux_sensor: function () {
+      return this.luxSensor.analogRead();
     },
     motion_sensor: function () {
       return state.motionSensor;
@@ -49,7 +53,7 @@ Cylon.robot({
     }
   },
   work: (my) => {
-    every((1).second(), () => {
+    every((5).second(), () => {
       my.motionSensor.digitalRead((err, val) => {
         state.motionSensor = val;
       });

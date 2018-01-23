@@ -51,7 +51,7 @@
       }
 
       refreshPage();
-      setInterval(refreshPage, 1000);
+      setInterval(refreshPage, 5000);
       $('.btn-on-off').click(() =>
         jCylonConnector.toggleLed(() =>
           jCylonConnector.updateLightStatus('#light-on', '#light-off')));
