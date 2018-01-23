@@ -7,6 +7,11 @@ const Cylon = require("cylon");
 
 const config = ini.parse(fs.readFileSync(__dirname + '/.env', 'utf-8'));
 
+let state = {
+  motionSensor: 0,
+  reedSwitch: 0
+};
+
 connect()
 .use(serveStatic(path.join(__dirname, 'www')))
 .use(serveStatic(path.join(__dirname, 'node_modules')))
@@ -26,8 +31,8 @@ Cylon.robot({
   },
   devices: {
     led: { driver: 'led', pin: 13 },
-    motionSensor: { driver: 'analog-sensor', pin: 0 },
-    reedSwitch: { driver: 'analog-sensor', pin: 1 }
+    motionSensor: { driver: 'direct-pin', pin: 12 },
+    reedSwitch: { driver: 'direct-pin', pin: 11 }
   },
   commands: {
     led_toggle: function () {
@@ -37,11 +42,20 @@ Cylon.robot({
       return this.led.isOn();
     },
     motion_sensor: function () {
-      return this.motionSensor.analogRead()
+      return state.motionSensor;
     },
     reed_sensor: function () {
-      return this.reedSwitch.analogRead();
+      return state.reedSwitch;
     }
   },
-  work: () => {}
+  work: (my) => {
+    every((1).second(), () => {
+      my.motionSensor.digitalRead((err, val) => {
+        state.motionSensor = val;
+      });
+      my.reedSwitch.digitalRead((err, val) => {
+        state.reedSwitch = val;
+      });
+    });
+  }
 }).start();
