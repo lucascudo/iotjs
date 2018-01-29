@@ -1,33 +1,34 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, StyleSheet, View } from 'react-native';
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Text
-} from 'native-base';
+import { Container, Text } from 'native-base';
+import ChickenRunHeader from './components/Header';
+import ChickenRunContent from './components/Content';
 
 export default class ChickenRunAPP extends Component {
+  apiUri = 'http://172.20.10.181:3000';
+
   state = {
     ready: 0,
-    ledIsOn: 0,
-    isSunny: 0,
-    doorIsOpen: 0,
-    thereIsMovement: 0,
+    luminosity: 0,
+    ledIsOn: false,
+    doorIsOpen: false,
+    thereIsMovement: false,
   };
-  toogleLed = () =>
-    this.remoteCommand('led_toggle', () => this.updateStatus('led'));
-  updateAllDevices = () =>
-    ['led', 'lux', 'motion', 'reed'].forEach(this.updateStatus);
-  updateStatus = (device) => {
+
+  remoteCommand = (command, cb) => {
+    return fetch(this.apiUri + '/api/robots/Robot%201/commands/' + command)
+      .then((res) => res.json())
+      .then(cb)
+      .catch(console.error);
+  }
+
+  toggleLed = () =>
+    this.remoteCommand('led_toggle', () => this.syncStatus('led'));
+
+  syncAllDevices = () =>
+    ['led', 'lux', 'motion', 'reed'].forEach(this.syncStatus);
+
+  syncStatus = (device) => {
     const devices = {
       led: {
         command: 'led_is_on',
@@ -35,7 +36,7 @@ export default class ChickenRunAPP extends Component {
       },
       lux: {
         command: 'lux_sensor',
-        state: 'isSunny'
+        state: 'luminosity'
       },
       motion: {
         command: 'motion_sensor',
@@ -46,23 +47,22 @@ export default class ChickenRunAPP extends Component {
         state: 'doorIsOpen'
       }
     };
-    return fetch('http://172.20.10.181:3000/api/robots/Robot%201/commands/' + devices[device].command)
-      .then((res) => {
-        let stateUpdate = {};
-        res = res.json();
-        stateUpdate[devices[device].state] = res.result;
-        this.setState(update);
-      })
-      .catch(console.error);
+    return this.remoteCommand(devices[device].command, (res) => {
+      let stateUpdate = {};
+      stateUpdate[devices[device].state] = res.result;
+      this.setState(stateUpdate);
+    });
   }
+
   async componentWillMount() {
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
-    setInterval(this.updateAllDevices, 5000);
+    setInterval(this.syncAllDevices, 5000);
     this.setState({ ready: true });
   }
+
   render() {
     if (!this.state.ready) {
       return (
@@ -71,55 +71,16 @@ export default class ChickenRunAPP extends Component {
         </Container>
       );
     }
-    const icons = {
-      led: (this.state.ledIsOn) ? "ios-bulb-outline" : "ios-bulb",
-      sunny: (this.state.isSunny > 100) ? "ios-sunny-outline" : "ios-sunny",
-      motion: (this.state.thereIsMovement) ? "ios-walk" : "ios-remove-circle"
-    };
     return (
       <Container>
         <ChickenRunHeader/>
         <ChickenRunContent
           doorIsOpen={this.state.doorIsOpen}
-          led={icons.led}
-          sunny={icons.sunny}
-          motion={icons.motion}
-          toogleLed={this.toogleLed}/>
+          ledIsOn={this.state.ledIsOn}
+          thereIsMovement={this.state.thereIsMovement}
+          luminosity={this.state.luminosity}
+          toggleLed={this.toggleLed}/>
       </Container>
-    );
-  }
-}
-
-export class ChickenRunHeader extends Component {
-  render() {
-    return (
-      <Header>
-        <Left>
-          <Button transparent>
-            <Icon name='menu' />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Header</Title>
-        </Body>
-        <Right />
-      </Header>
-    );
-  }
-}
-
-export class ChickenRunContent extends Component {
-  render() {
-    const doorIcon = (this.props.doorIsOpen)
-      ? <Icon name="ios-alert"> <Text>the door is open</Text> </Icon>
-      : <Text>the door is closed</Text>;
-    return (
-      <Content>
-        <Icon name={this.props.led} onPress={this.props.toogleLed}/>
-        <Icon name={this.props.sunny}/>
-        <Icon name={this.props.motion}/>
-        {doorIcon}
-      </Content>
     );
   }
 }
