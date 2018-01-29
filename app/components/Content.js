@@ -6,15 +6,13 @@ export default class ChickenRunContent extends Component {
     const iconNames = {
       led: (this.props.ledIsOn) ? "ios-bulb" : "ios-bulb-outline",
       luminosity: (this.props.luminosity > 100) ? "ios-sunny" : "ios-sunny-outline",
-      motion: (this.props.thereIsMovement) ? "ios-walk" : "ios-remove-circle"
+      motion: (this.props.thereIsMovement) ? "ios-walk" : "ios-remove-circle",
+      motionCheckmark: (this.props.thereIsMovement) ? "ios-checkmark" : "ios-close"
     };
-    const motionCheckmarkIcon = (this.props.thereIsMovement)
-      ? <Right> <Icon name="ios-checkmark" /> </Right>
-      : <Right />;
-    const doorIcon = (this.props.doorIsOpen)
-      ? <Left> <Icon name="ios-alert" /> </Left>
-      : <Left />;
-    const doorStatus = (this.props.doorIsOpen) ? 'open' : 'closed';
+    const door = {
+      icon: (this.props.doorIsOpen) ? <Icon name="ios-alert" /> : null,
+      status: (this.props.doorIsOpen) ? "Open" : "Closed"
+    };
     return (
       <Content>
       <List>
@@ -47,15 +45,19 @@ export default class ChickenRunContent extends Component {
             <Body>
               <Text>Motion Detection</Text>
             </Body>
-            {motionCheckmarkIcon}
+            <Right>
+              <Icon name={iconNames.motionCheckmark} />
+            </Right>
           </ListItem>
           <ListItem icon>
-            {doorIcon}
+            <Left>
+              {door.icon}
+            </Left>
             <Body>
               <Text>Door Status</Text>
             </Body>
             <Right>
-              <Text>{doorStatus}</Text>
+              <Text>{door.status}</Text>
             </Right>
           </ListItem>
         </List>

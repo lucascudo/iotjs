@@ -8,7 +8,7 @@ export default class ChickenRunAPP extends Component {
   apiUri = 'http://172.20.10.181:3000';
 
   state = {
-    ready: 0,
+    ready: false,
     luminosity: 0,
     ledIsOn: false,
     doorIsOpen: false,
@@ -22,11 +22,9 @@ export default class ChickenRunAPP extends Component {
       .catch(console.error);
   }
 
-  toggleLed = () =>
-    this.remoteCommand('led_toggle', () => this.syncStatus('led'));
+  toggleLed = () => this.remoteCommand('led_toggle', () => this.syncStatus('led'));
 
-  syncAllDevices = () =>
-    ['led', 'lux', 'motion', 'reed'].forEach(this.syncStatus);
+  syncAllDevices = () => ['led', 'lux', 'motion', 'reed'].forEach(this.syncStatus);
 
   syncStatus = (device) => {
     const devices = {
