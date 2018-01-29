@@ -7,7 +7,8 @@ Seu João Paz viaja muito e está preocupado com sua criação de galinhas que p
 
 Você foi designado para criar o protótipo de tal aplicação que necessitará de:
 
-Webservice
-Led
-Hardware/Microcontrolador (NodeMcu, Arduino, Raspbery pi etc)
-Interface entre webservice e hardware (Dashboard que permita a interação do cliente com o sistema).
+- Software (Webservice)
+- Sensores
+- Led
+- Microcontrolador (NodeMcu, Arduino, Raspbery pi etc)
+- Interface gráfica entre webservice e hardware (dashboard para interação entre cliente e sistema)

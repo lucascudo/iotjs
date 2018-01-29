@@ -23,30 +23,46 @@ export default class ChickenRunAPP extends Component {
     doorIsOpen: 0,
     thereIsMovement: 0,
   };
-
-  remoteCommand = (command, cb) => {
-    return fetch('http://172.20.10.181:3000/api/robots/Robot%201/commands/' + command)
-    .then((res) => res.json())
-    .then(cb)
-    .catch(console.error);
+  toogleLed = () =>
+    this.remoteCommand('led_toggle', () => this.updateStatus('led'));
+  updateAllDevices = () =>
+    ['led', 'lux', 'motion', 'reed'].forEach(this.updateStatus);
+  updateStatus = (device) => {
+    const devices = {
+      led: {
+        command: 'led_is_on',
+        state: 'ledIsOn'
+      },
+      lux: {
+        command: 'lux_sensor',
+        state: 'isSunny'
+      },
+      motion: {
+        command: 'motion_sensor',
+        state: 'thereIsMovement'
+      },
+      reed: {
+        command: 'reed_sensor',
+        state: 'doorIsOpen'
+      }
+    };
+    return fetch('http://172.20.10.181:3000/api/robots/Robot%201/commands/' + devices[device].command)
+      .then((res) => {
+        let stateUpdate = {};
+        res = res.json();
+        stateUpdate[devices[device].state] = res.result;
+        this.setState(update);
+      })
+      .catch(console.error);
   }
-
-  updateStatus = (commandToRun, stateToUpdate) => this.remoteCommand(commandToRun, (res) => {
-    let update = {};
-    update[stateToUpdate] = res.result;
-    this.setState(update);
-  });
-
-  _updateLedStatus = () => this.updateStatus('led_is_on', 'ledIsOn');
-
-  _updateReedStatus = () => this.updateStatus('reed_sensor', 'doorIsOpen');
-
-  _updateMotionSensorStatus = () => this.updateStatus('motion_sensor', 'thereIsMovement');
-
-  _updateLuxSensorStatus = () => this.updateStatus('lux_sensor', 'isSunny');
-
-  _toogleLed = () => this.remoteCommand('led_toggle', this._updateLedStatus);
-
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    });
+    setInterval(this.updateAllDevices, 5000);
+    this.setState({ ready: true });
+  }
   render() {
     if (!this.state.ready) {
       return (
@@ -58,36 +74,19 @@ export default class ChickenRunAPP extends Component {
     const icons = {
       led: (this.state.ledIsOn) ? "ios-bulb-outline" : "ios-bulb",
       sunny: (this.state.isSunny > 100) ? "ios-sunny-outline" : "ios-sunny",
-      motion: (this.state.thereIsMovement) ? "ios-walk" : "ios-remove-circle",
-      door: (this.state.doorIsOpen)
-        ? <Icon name="ios-alert"> <Text>the door is open</Text> </Icon>
-        : null
+      motion: (this.state.thereIsMovement) ? "ios-walk" : "ios-remove-circle"
     };
     return (
       <Container>
         <ChickenRunHeader/>
         <ChickenRunContent
+          doorIsOpen={this.state.doorIsOpen}
           led={icons.led}
           sunny={icons.sunny}
           motion={icons.motion}
-          door={icons.door}
-          toogleLed={this._toogleLed}/>
+          toogleLed={this.toogleLed}/>
       </Container>
     );
-  }
-
-  async componentWillMount() {
-    await Expo.Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-    });
-    this.setState({ ready: true });
-    setInterval(() => {
-      this._updateLedStatus();
-      this._updateReedStatus();
-      this._updateLuxSensorStatus();
-      this._updateMotionSensorStatus();
-    }, 5000);
   }
 }
 
@@ -111,12 +110,15 @@ export class ChickenRunHeader extends Component {
 
 export class ChickenRunContent extends Component {
   render() {
+    const doorIcon = (this.props.doorIsOpen)
+      ? <Icon name="ios-alert"> <Text>the door is open</Text> </Icon>
+      : <Text>the door is closed</Text>;
     return (
       <Content>
         <Icon name={this.props.led} onPress={this.props.toogleLed}/>
         <Icon name={this.props.sunny}/>
         <Icon name={this.props.motion}/>
-        {this.props.door}
+        {doorIcon}
       </Content>
     );
   }
