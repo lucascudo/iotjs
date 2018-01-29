@@ -5,17 +5,21 @@ export default class ChickenRunContent extends Component {
   render() {
     const iconNames = {
       led: (this.props.ledIsOn) ? "ios-bulb" : "ios-bulb-outline",
-      luminosity: (this.props.luminosity > 100) ? "ios-sunny" : "ios-sunny-outline",
-      motion: (this.props.thereIsMovement) ? "ios-walk" : "ios-remove-circle",
-      motionCheckmark: (this.props.thereIsMovement) ? "ios-checkmark" : "ios-close"
+      luminosity: (this.props.luminosity > 100) ? "ios-sunny" : "ios-sunny-outline"
+    };
+    const motion = {
+      iconName: (this.props.thereIsMovement) ? "ios-walk" : "ios-remove",
+      checkmarkIcon: (this.props.thereIsMovement) ? "ios-checkmark" : "ios-close",
+      checkmarkIconColor: (this.props.thereIsMovement) ? "green" : "red"
     };
     const door = {
-      icon: (this.props.doorIsOpen) ? <Icon name="ios-alert" /> : null,
-      status: (this.props.doorIsOpen) ? "Open" : "Closed"
+      icon: (this.props.doorIsOpen) ? <Icon name="ios-alert" /> : <Icon />,
+      statusText: (this.props.doorIsOpen) ? "open" : "closed",
+      statusColor: (this.props.doorIsOpen) ? "red" : "green"
     };
     return (
       <Content>
-      <List>
+        <List>
           <ListItem icon>
             <Left>
               <Icon name={iconNames.led} />
@@ -40,13 +44,13 @@ export default class ChickenRunContent extends Component {
           </ListItem>
           <ListItem icon>
             <Left>
-              <Icon name={iconNames.motion} />
+              <Icon name={motion.iconName} />
             </Left>
             <Body>
               <Text>Motion Detection</Text>
             </Body>
             <Right>
-              <Icon name={iconNames.motionCheckmark} />
+              <Icon name={motion.checkmarkIcon} style={{color: motion.checkmarkIconColor}} />
             </Right>
           </ListItem>
           <ListItem icon>
@@ -57,7 +61,7 @@ export default class ChickenRunContent extends Component {
               <Text>Door Status</Text>
             </Body>
             <Right>
-              <Text>{door.status}</Text>
+              <Text style={{color: door.statusColor }}>{door.statusText}</Text>
             </Right>
           </ListItem>
         </List>
