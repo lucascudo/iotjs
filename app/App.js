@@ -16,17 +16,10 @@ export default class ChickenRunAPP extends Component {
   };
 
   remoteCommand = (command, cb) => {
-    try {
-      let request = new XMLHttpRequest(this.apiUri + '/api/robots/Robot%201/commands/' + command);
-      request.onreadystatechange = (err) => {
-        if (request.readyState !== 4) return;
-        if (request.status === 200) return cb(JSON.parse(request.responseText));
-        console.warn(err || 'Can`t connect to server');
-      };
-      request.send();
-    } catch (err) {
-      console.warn(err);
-    }
+    return fetch(this.apiUri + '/api/robots/Robot%201/commands/' + command)
+      .then((res) => res.json())
+      .then(cb)
+      .catch(console.warn);
   };
 
   syncAllDevices = () =>
