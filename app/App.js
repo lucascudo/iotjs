@@ -29,7 +29,8 @@ export default class ChickenRunAPP extends Component {
     }
   };
 
-  syncAllDevices = () => ['led', 'lux', 'motion', 'reed'].forEach(this.syncStatus);
+  syncAllDevices = () =>
+    ['led', 'lux', 'motion', 'reed'].forEach(this.syncStatus);
 
   syncStatus = (device) => {
     const devices = {
@@ -62,8 +63,8 @@ export default class ChickenRunAPP extends Component {
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
-    setInterval(this.syncAllDevices, 5000);
-    this.setState({ ready: true });
+    this.setState({ ready: true }, () =>
+      setInterval(this.syncAllDevices, 5000));
   };
 
   render() {
@@ -80,7 +81,9 @@ export default class ChickenRunAPP extends Component {
           ledIsOn={this.state.ledIsOn}
           thereIsMovement={this.state.thereIsMovement}
           luminosity={this.state.luminosity}
-          toggleLed={() => this.remoteCommand('led_toggle', () => this.syncStatus('led'))}/>
+          toggleLed={() =>
+            this.remoteCommand('led_toggle', () =>
+              this.syncStatus('led'))}/>
       </Container>
     );
   }
