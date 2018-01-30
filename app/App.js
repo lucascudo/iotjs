@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AppRegistry, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, AppRegistry, StyleSheet, View } from 'react-native';
 import { Container, Text } from 'native-base';
 import ChickenRunHeader from './components/Header';
 import ChickenRunContent from './components/Content';
@@ -16,13 +16,18 @@ export default class ChickenRunAPP extends Component {
   };
 
   remoteCommand = (command, cb) => {
-    return fetch(this.apiUri + '/api/robots/Robot%201/commands/' + command)
-      .then((res) => res.json())
-      .then(cb)
-      .catch(console.error);
-  }
-
-  toggleLed = () => this.remoteCommand('led_toggle', () => this.syncStatus('led'));
+    try {
+      let request = new XMLHttpRequest(this.apiUri + '/api/robots/Robot%201/commands/' + command);
+      request.onreadystatechange = (err) => {
+        if (request.readyState !== 4) return;
+        if (request.status === 200) return cb(JSON.parse(request.responseText));
+        console.warn(err || 'Can`t connect to server');
+      };
+      request.send();
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   syncAllDevices = () => ['led', 'lux', 'motion', 'reed'].forEach(this.syncStatus);
 
@@ -30,27 +35,27 @@ export default class ChickenRunAPP extends Component {
     const devices = {
       led: {
         command: 'led_is_on',
-        state: 'ledIsOn'
+        varName: 'ledIsOn'
       },
       lux: {
         command: 'lux_sensor',
-        state: 'luminosity'
+        varName: 'luminosity'
       },
       motion: {
         command: 'motion_sensor',
-        state: 'thereIsMovement'
+        varName: 'thereIsMovement'
       },
       reed: {
         command: 'reed_sensor',
-        state: 'doorIsOpen'
+        varName: 'doorIsOpen'
       }
     };
     return this.remoteCommand(devices[device].command, (res) => {
       let stateUpdate = {};
-      stateUpdate[devices[device].state] = res.result;
+      stateUpdate[devices[device].varName] = res.result;
       this.setState(stateUpdate);
     });
-  }
+  };
 
   async componentWillMount() {
     await Expo.Font.loadAsync({
@@ -59,17 +64,15 @@ export default class ChickenRunAPP extends Component {
     });
     setInterval(this.syncAllDevices, 5000);
     this.setState({ ready: true });
-  }
+  };
 
   render() {
-    if (!this.state.ready) {
-      return (
-        <Container>
-          <Text>Loading...</Text>
-        </Container>
-      );
-    }
-    return (
+    return (!this.state.ready)
+    ? (
+      <Container>
+        <ActivityIndicator />
+      </Container>
+    ) : (
       <Container>
         <ChickenRunHeader/>
         <ChickenRunContent
@@ -77,11 +80,11 @@ export default class ChickenRunAPP extends Component {
           ledIsOn={this.state.ledIsOn}
           thereIsMovement={this.state.thereIsMovement}
           luminosity={this.state.luminosity}
-          toggleLed={this.toggleLed}/>
+          toggleLed={() => this.remoteCommand('led_toggle', () => this.syncStatus('led'))}/>
       </Container>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -96,4 +99,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   }
-})
+});
