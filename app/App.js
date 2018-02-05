@@ -5,7 +5,7 @@ import ChickenRunHeader from './components/Header';
 import ChickenRunContent from './components/Content';
 
 export default class ChickenRunAPP extends Component {
-  apiUri = 'http://172.20.10.181:3000';
+  apiUri = 'http://192.168.0.30:3000';
 
   state = {
     ready: false,
@@ -56,8 +56,10 @@ export default class ChickenRunAPP extends Component {
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
-    this.setState({ ready: true }, () =>
-      setInterval(this.syncAllDevices, 5000));
+    this.setState({ ready: true }, () => {
+      this.syncAllDevices()
+      setInterval(this.syncAllDevices, 5000);
+    });
   };
 
   render() {
