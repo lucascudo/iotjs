@@ -12,3 +12,7 @@ Você foi designado para criar o protótipo de tal aplicação que necessitará 
 - Led
 - Microcontrolador (NodeMcu, Arduino, Raspbery pi etc)
 - Interface gráfica entre webservice e hardware (dashboard para interação entre cliente e sistema)
+
+
+## Prescrição arquitetural
+![arquitetura](https://github.com/lucascudo/iotjs/raw/master/architectural_prescription.png)
