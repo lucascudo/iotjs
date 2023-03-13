@@ -1,4 +1,4 @@
-# chicken run avoidance
+# home automation
 Simple Internet of Things Proof of Concept fully developed in JavaScript.
 
 ## Setup
